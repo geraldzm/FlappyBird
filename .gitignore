@@ -1,3 +1,5 @@
+resource/
+.idea/
 # Compiled class file
 *.class
 
