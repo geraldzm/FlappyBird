@@ -8,7 +8,7 @@ public class Pipe extends ObjectGame implements GetResources{
     private BufferedImage pipeD;
     private float y2;
     private int backgroundHeight;
-    public static int spreadBetweenPipes = 90;
+    public static int spreadBetweenPipes = 110;
 
     public Pipe(float x, float speed, int backgroundHeight) {
         super(x, 0, speed,0, 52,320);
@@ -37,7 +37,7 @@ public class Pipe extends ObjectGame implements GetResources{
     }
 
     @Override
-    public boolean contains(Rectangle r) {
-        return super.contains(r) || new Rectangle((int)x, (int)y2, w, h).contains(r);
+    public boolean intersects(Rectangle r) {
+        return super.intersects(r) || new Rectangle((int)x, (int)y2, w, h).intersects(r);
     }
 }

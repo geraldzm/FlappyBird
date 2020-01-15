@@ -9,8 +9,11 @@ public abstract class ObjectGame {
     public abstract void render(Graphics g);
     public abstract void tick();
 
-    public boolean contains(Rectangle r){
-        return new Rectangle((int)x, (int)y, w, h).contains(r);
+    public boolean intersects(Rectangle r){
+        return new Rectangle((int)x, (int)y, w, h).intersects(r);
+    }
+    public Rectangle getRectangle(){
+        return new Rectangle((int)x, (int)y, w, h);
     }
 
     public ObjectGame() {

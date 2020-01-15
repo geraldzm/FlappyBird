@@ -10,19 +10,19 @@ public class Game extends Canvas implements Runnable{
     public static final int WIDTH = 942, HEIGHT = WIDTH / 12* 9;
     private Thread thread;
     private boolean running = false;
-    private Background background;
-    private Floor floor;
-    private Pipe[] pipes;
+    private HandlerGameObjects handler;
     private Bird bird;
 
     Game(){
-        background = new Background();
-        floor = new Floor(1f);
-        pipes = new Pipe[4];
+        Background background = new Background();
         bird = new Bird(100,150,0, 0, 43*3, 30);
-        for (int i = 0; i < pipes.length; i++) {
-            pipes[i] = new Pipe(WIDTH + (i * 250 ), 1f, background.getH());
+        handler = new HandlerGameObjects(bird);
+        handler.addElement(background);
+        for (int i = 0; i < 4; i++) {
+            handler.addElement(new Pipe(WIDTH + (i * 250 ), 1f, background.getH()));
         }
+        handler.addElement(new Floor(1f));
+        handler.addElement(bird);
         addKeyListener(new InputKey(bird));
 
         new WindowGame(WIDTH, HEIGHT, "Flappy Bird", this);
@@ -68,7 +68,7 @@ public class Game extends Canvas implements Runnable{
 
             if(System.currentTimeMillis() - timer > 1000) {
                 timer += 1000;
-                System.out.println("FPS: "+ frames);
+                //System.out.println("FPS: "+ frames);
                 frames = 0;
             }
         }
@@ -83,25 +83,14 @@ public class Game extends Canvas implements Runnable{
         }
         Graphics g = bs.getDrawGraphics();
 
-        //handler.render(g);
-        background.render(g);
-        for (int i = 0; i < pipes.length; i++) {
-            pipes[i].render(g);
-        }
-        floor.render(g);
-        bird.render(g);
+        handler.render(g);
 
         g.dispose();
         bs.show();
     }
 
     private void tick() {
-        floor.tick();
-        background.tick();
-        for (int i = 0; i < pipes.length; i++) {
-            pipes[i].tick();
-        }
-        bird.tick();
+        handler.tick();
     }
 
     public static void main(String[] args) {
