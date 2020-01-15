@@ -6,9 +6,12 @@ import java.util.ArrayList;
 public class HandlerGameObjects {
     private ArrayList<ObjectGame> objects;
     private Bird bird;
-    public HandlerGameObjects(Bird bird) {
+    private Game game;
+
+    public HandlerGameObjects(Bird bird, Game game) {
         objects = new ArrayList<>();
         this.bird = bird;
+        this.game = game;
     }
 
     public void render(Graphics g){
@@ -21,7 +24,7 @@ public class HandlerGameObjects {
             ObjectGame o = objects.get(i);
             if(o instanceof Pipe){
                 if(o.intersects(bird.getRectangle())){
-                    System.out.println("Muere");
+                    game.gameOver();
                 }
             }
             o.tick();

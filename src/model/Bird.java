@@ -24,8 +24,6 @@ public class Bird extends ObjectGame implements GetResources{
             flutter = 0;
         }else{
             g.drawImage(bird.getSubimage(43*flutter, 0, 43, 30), (int) x, (int)y, null);
-            flutter = Utility.clamp(flutter+1, 0, 3);
-            flutter = flutter == 3 ? 0: flutter;
         }
     }
 
@@ -33,6 +31,8 @@ public class Bird extends ObjectGame implements GetResources{
     public void tick() {
         y += speedY;
         speedY = Utility.clamp(speedY+0.2f, -4f, 4f);
+        flutter = Utility.clamp(flutter+1, 0, 3);
+        flutter = flutter == 3 ? 0: flutter;
     }
     public void up(){
         speedY = velocity;

@@ -5,25 +5,31 @@ import view.WindowGame;
 
 import java.awt.*;
 import java.awt.image.BufferStrategy;
+import java.util.ArrayList;
 
 public class Game extends Canvas implements Runnable{
     public static final int WIDTH = 942, HEIGHT = WIDTH / 12* 9;
     private Thread thread;
-    private boolean running = false;
+    private boolean running = false, gameOver = false;
     private HandlerGameObjects handler;
     private Bird bird;
+    private HeadBar headBar;
+    private ArrayList<Integer> scores;
 
     Game(){
         Background background = new Background();
         bird = new Bird(100,150,0, 0, 43*3, 30);
-        handler = new HandlerGameObjects(bird);
+        handler = new HandlerGameObjects(bird, this);
         handler.addElement(background);
         for (int i = 0; i < 4; i++) {
             handler.addElement(new Pipe(WIDTH + (i * 250 ), 1f, background.getH()));
         }
         handler.addElement(new Floor(1f));
         handler.addElement(bird);
+        headBar = new HeadBar();
         addKeyListener(new InputKey(bird));
+
+        scores = new ArrayList<>();
 
         new WindowGame(WIDTH, HEIGHT, "Flappy Bird", this);
     }
@@ -84,13 +90,22 @@ public class Game extends Canvas implements Runnable{
         Graphics g = bs.getDrawGraphics();
 
         handler.render(g);
+        headBar.render(g);
 
         g.dispose();
         bs.show();
     }
 
     private void tick() {
-        handler.tick();
+        if(!gameOver) {
+            handler.tick();
+            headBar.tick();
+        }
+    }
+
+    public void gameOver(){
+        gameOver = true;
+        scores.add(headBar.getScore());
     }
 
     public static void main(String[] args) {
