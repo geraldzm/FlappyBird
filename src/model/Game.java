@@ -1,36 +1,31 @@
 package model;
 
 import controller.InputKey;
+import controller.InputMouse;
 import view.WindowGame;
 
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.util.ArrayList;
+import model.MenuGame.Status;
 
 public class Game extends Canvas implements Runnable{
     public static final int WIDTH = 942, HEIGHT = WIDTH / 12* 9;
     private Thread thread;
-    private boolean running = false, gameOver = false;
+    private boolean running = false;
     private HandlerGameObjects handler;
     private Bird bird;
     private HeadBar headBar;
     private ArrayList<Integer> scores;
+    private MenuGame menuGame;
+    public static Status status;
 
     Game(){
-        Background background = new Background();
-        bird = new Bird(100,150,0, 0, 43*3, 30);
-        handler = new HandlerGameObjects(bird, this);
-        handler.addElement(background);
-        for (int i = 0; i < 4; i++) {
-            handler.addElement(new Pipe(WIDTH + (i * 250 ), 1f, background.getH()));
-        }
-        handler.addElement(new Floor(1f));
-        handler.addElement(bird);
-        headBar = new HeadBar();
-        addKeyListener(new InputKey(bird));
-
+        status = Status.START_MENU;
+        menuGame = new MenuGame(this);
+        restartGame();
+        addMouseListener(new InputMouse(menuGame));
         scores = new ArrayList<>();
-
         new WindowGame(WIDTH, HEIGHT, "Flappy Bird", this);
     }
 
@@ -91,21 +86,37 @@ public class Game extends Canvas implements Runnable{
 
         handler.render(g);
         headBar.render(g);
-
+        if(status == Status.START_MENU || status == Status.RATING)menuGame.render(g);
         g.dispose();
         bs.show();
     }
 
     private void tick() {
-        if(!gameOver) {
+        if(status == MenuGame.Status.GAMING) {
             handler.tick();
             headBar.tick();
+        }else if(status == Status.START_MENU || status == Status.RATING){
+            menuGame.tick();
         }
     }
 
     public void gameOver(){
-        gameOver = true;
         scores.add(headBar.getScore());
+        status = MenuGame.Status.START_MENU;
+    }
+
+    public void restartGame(){
+        Background background = new Background();
+        bird = new Bird(100,150,0, 0, 43*3, 30);
+        handler = new HandlerGameObjects(bird, this);
+        handler.addElement(background);
+        for (int i = 0; i < 4; i++) {
+            handler.addElement(new Pipe(WIDTH + (i * 250 ), 1f, background.getH()));
+        }
+        addKeyListener(new InputKey(bird));
+        handler.addElement(new Floor(1f));
+        handler.addElement(bird);
+        headBar = new HeadBar();
     }
 
     public static void main(String[] args) {

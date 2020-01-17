@@ -50,6 +50,6 @@ public class Bird extends ObjectGame implements GetResources{
 
     @Override
     public Rectangle getRectangle() {
-        return new Rectangle((int)x, (int)y, 43, h);
+        return new Rectangle((int)x, (int)y, 43-5, h-5);
     }
 }
