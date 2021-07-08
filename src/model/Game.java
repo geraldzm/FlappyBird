@@ -9,7 +9,7 @@ import java.awt.image.BufferStrategy;
 import java.util.ArrayList;
 import model.MenuGame.Status;
 
-public class Game extends Canvas implements Runnable{
+public class Game extends Canvas implements Runnable {
     public static final int WIDTH = 942, HEIGHT = WIDTH / 12* 9;
     private Thread thread;
     private boolean running = false;
